@@ -1,0 +1,11 @@
+library(sqldf)
+df <- read.csv.sql("household_power_consumption.txt", sql = "select * from file where Date = '2/2/2007' or Date = '1/2/2007'", header=TRUE, sep = ";")
+df$Date <- as.Date(df$Date, "%d/%m/%Y")
+df$Date <- paste(df$Date, df$Time)
+df$Date <- strptime(df$Date, format="%Y-%m-%d %H:%M:%S")
+df <- df[,c(1,3:9)]
+df$Date <- as.POSIXct(df$Date)
+par(mfrow = c(1,1))
+hist(df$Global_active_power ,xlab = "Global active power (kilowatts)", ylab = "Frequency", col="red", main="Global Active Power",  cex.lab=.75, cex.axis=.75, cex.main=.75, cex.sub=.5)
+dev.copy(png,"plot1.png", width=480, height=480)
+dev.off()
